@@ -80,7 +80,7 @@ function spotifySong(song){
 		search = movie;
 	}
 
-	var queryStr = 'http://www.omdbapi.com/?t=' + search + '&y=&plot=full&apikey=40e9cece';
+	var queryStr = 'http://www.omdbapi.com/?t=' + search + '';
 
 
 	request(queryStr, function (error, response, body) {
@@ -169,7 +169,6 @@ if (liriCommand === `spotify-this-song`) {
 		if (err) throw err;
 
 		outputStr = 'Commands:\n' + 
-				   '    node liri.js my-tweets\n' + 
 				   '    node liri.js spotify-this-song "<song_name>"\n' + 
 				   '    node liri.js movie-this "<movie_name>"\n' + 
 				   '    node liri.js do-what-it-says\n';
