@@ -5,8 +5,8 @@ var request = require('request');
 var fs 		= require('fs');
 
 var spotify = new Spotify({
-	id: '2c7c838f2f094b92a90d8a1c01a88a27',
-	secret: '2c7c838f2f094b92a90d8a1c01a88a27'
+	id: '',
+	secret: ''
 });
 
 var keys 	= require('./keys.js');
@@ -68,30 +68,25 @@ function spotifySong(song){
 		}
 
 	function retrieveOBDBInfo(movie) {
-	// Append the command to the log.txt file
+
 	fs.appendFile('./log.txt', 'User Command: node liri.js movie-this ' + movie + '\n\n', (err) => {
 		if (err) throw err;
 	});
 
-	// If no movie is provided, LIRI defaults to 'Mr. Nobody'
 	var search;
 	if (movie === '') {
-		search = 'Mr. Nobody';
+		search = 'The Hateful Eight';
 	} else {
 		search = movie;
 	}
 
-	
-
-	// Construct the query string
 	var queryStr = 'http://www.omdbapi.com/?t=' + search + '&y=&plot=full&apikey=40e9cece';
 
-	// Send the request to OMDB
+
 	request(queryStr, function (error, response, body) {
 		if ( error || (response.statusCode !== 200) ) {
 			var errorStr1 = 'ERROR: Retrieving OMDB entry -- ' + error;
 
-			// Append the error string to the log.txt file
 			fs.appendFile('./log.txt', errorStr1, (err) => {
 				if (err) throw err;
 				console.log(errorStr1);
@@ -102,14 +97,13 @@ function spotifySong(song){
 			if (!data.Title && !data.Released && !data.imdbRating) {
 				var errorStr2 = 'ERROR: No movie info retrieved!';
 
-				// Append the error string to the log.txt file
+
 				fs.appendFile('./log.txt', errorStr2, (err) => {
 					if (err) throw err;
 					console.log(errorStr2);
 				});
 				return;
 			} else {
-		    	// Pretty print the movie information
 		    	var outputStr = '------------------------\n' + 
 								'Movie Information:\n' + 
 								'------------------------\n\n' +
@@ -122,8 +116,6 @@ function spotifySong(song){
 								'Plot: ' + data.Plot + '\n' +
 								'Actors: ' + data.Actors + '\n'; 
 								
-
-				// Append the output to the log.txt file
 				fs.appendFile('./log.txt', 'LIRI Response:\n\n' + outputStr + '\n', (err) => {
 					if (err) throw err;
 					console.log(outputStr);
@@ -133,20 +125,18 @@ function spotifySong(song){
 	});
 }
 
-// Determine the desired command
 function doAsTheySay() {
-	// Append the command to the log.txt file
+
 	fs.appendFile('./log.txt', 'User Command: node liri.js do-what-it-says\n\n', (err) => {
 		if (err) throw err;
 	});
 
-	// Read in the file containing the command
 	fs.readFile('./random.txt', 'utf8', function (error, data) {
 		if (error) {
 			console.log('ERROR: Reading random.txt -- ' + error);
 			return;
 		} else {
-			// Split out the command name and the parameter name
+
 			var cmdString = data.split(',');
 			var command = cmdString[0].trim();
 			var param = cmdString[1].trim();
@@ -164,7 +154,6 @@ function doAsTheySay() {
 	});
 }
 
-// Determine which LIRI command is being requested
 if (liriCommand === `spotify-this-song`) {
 	spotifySong(liriArg);
 
@@ -175,19 +164,16 @@ if (liriCommand === `spotify-this-song`) {
 	doAsTheySay();
 
 } else {
-	// Append the command to the log file
+
 	fs.appendFile('./log.txt', 'User Command: ' + cmdArgs + '\n', (err) => {
 		if (err) throw err;
 
-		// If the user types in a command that LIRI does not recognize, output the Usage menu 
-		// which lists the available commands.
 		outputStr = 'Commands:\n' + 
 				   '    node liri.js my-tweets\n' + 
 				   '    node liri.js spotify-this-song "<song_name>"\n' + 
 				   '    node liri.js movie-this "<movie_name>"\n' + 
 				   '    node liri.js do-what-it-says\n';
 
-		// Append the output to the log.txt file
 		fs.appendFile('./log.txt', 'LIRI Response:\n\n' + outputStr + '\n', (err) => {
 			if (err) throw err;
 			console.log(outputStr);
